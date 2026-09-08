@@ -1,0 +1,139 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Kind } from "@/components/Kind";
+
+export const Route = createFileRoute("/segments")({ component: SegmentsPage });
+
+const SEGMENTS = [
+  {
+    name: "High-bill independent homes (3–5 kW)",
+    priority: "P0",
+    where: "Kozhikode urban, Thrissur, TVM suburban, Kottayam, Kannur (meter-aware)",
+    size: "Largest addressable. Kerala ~78.5 lakh HH; even 4% high-slab homes is >3 lakh roofs.",
+    pay: "PM Surya Ghar CFA ₹78k at ≥3 kW. Payback 3–5 years on 200+ unit bills.",
+    why: "Subsidy urgency (scheme window through FY 2026–27) + telescopic tariff pain above 150–200 units.",
+    objection: "Trust, subsidy delay, roof leak fear.",
+    cycle: "14–45 days",
+    aov: "₹1.2–2.4 L after CFA (ESTIMATE)",
+    cac: "Lowest when geo-fenced digital + electrician referral",
+  },
+  {
+    name: "NRI / caretaker homes",
+    priority: "P0 in Kottayam, Kannur, Pathanamthitta, Malappuram",
+    where: "Gulf-linked taluks, empty-looking large roofs",
+    size: "Unknown. Remittance score is an ASSUMPTION, not a DES series.",
+    pay: "Cash-rich, bill-poor until occupancy — sell on asset protection + remote monitor, not current bill.",
+    why: "WhatsApp-native. One trusted installer story travels a whole village.",
+    objection: "Nobody home for survey; fear of theft/quality.",
+    cycle: "30–90 days",
+    aov: "5–10 kW tickets",
+    cac: "Low if you already have a local champion",
+  },
+  {
+    name: "Small commercial (shops, showrooms, clinics)",
+    priority: "P1",
+    where: "Big Bazar Thrissur, Central Kozhikode, Aluva, Angamaly, Attingal",
+    size: "Hundreds of named DTRs in sample",
+    pay: "Daytime load = high self-consumption. Net billing, not domestic net-metering, for many.",
+    why: "AOV 2–4× residential. GST input may apply.",
+    objection: "Lease roofs, partner disputes, three-phase meter wait.",
+    cycle: "30–75 days",
+    aov: "5–20 kW",
+    cac: "Outbound + Google Maps",
+  },
+  {
+    name: "Apartment associations (common load)",
+    priority: "P1",
+    where: "Kochi, TVM, Kozhikode, Thrissur urban",
+    size: "Growing. Vintage View TVM 20 kW case (Mercom, Sep 2026) is the proof story.",
+    pay: "Lifts, pumps, lighting — 3.5–4 year payback in that case study.",
+    why: "One close = 20–100 kW. Network effect inside the building.",
+    objection: "Committee politics, structural NOC, who owns the savings.",
+    cycle: "60–180 days",
+    aov: "15–100 kW",
+    cac: "High time, low media spend",
+  },
+  {
+    name: "Hotels / resorts / homestays",
+    priority: "P1 selective",
+    where: "Alappuzha backwaters, Idukki/Wayanad hospitality only, Kozhikode Beach, Kovalam-adjacent TVM",
+    size: "118 hotel-tagged DTRs; 8+ A+ with ≥160 kW remaining",
+    pay: "Daytime AC/laundry. Strong IRR if occupancy is real.",
+    why: "Named lead list in this app.",
+    objection: "Seasonality, heritage roofs, flood (Alappuzha).",
+    cycle: "45–120 days",
+    aov: "10–50 kW",
+    cac: "Direct B2B",
+  },
+  {
+    name: "Hospitals, schools, churches, mosques",
+    priority: "P1 institutional",
+    where: "Statewide on VH DTRs; Kottayam churches, Malappuram community buildings",
+    size: "School 545 + hospital 287 + religious 832 tagged DTRs (many not High class)",
+    pay: "Trust halo — one church install sells the parish.",
+    why: "CSR + bill. Committees need a simple 10-year savings chart, not a yield model.",
+    objection: "Tendering, multiple signatories.",
+    cycle: "60–180 days",
+    aov: "10–40 kW",
+    cac: "Relationship",
+  },
+  {
+    name: "Industrial sheds / estates",
+    priority: "P1 Palakkad + Chalakkudy",
+    where: "Kanjikode, Chalakkudy industrial estate, Feroke mills, Palakkad gap",
+    size: "514 industrial-tagged DTRs",
+    pay: "Daytime process load. Net billing / behind-the-meter.",
+    why: "Highest AOV. Palakkad is white space: high irradiance, low residential wealth.",
+    objection: "Shutdown windows, roof sheet condition, DISCOM paperwork.",
+    cycle: "60–150 days",
+    aov: "50–500 kW",
+    cac: "Association talks, not ads",
+  },
+  {
+    name: "Mass rural 1 kW",
+    priority: "Avoid first",
+    where: "Wayanad, Idukki interiors, low-slab homes",
+    size: "Large, unprofitable",
+    pay: "CFA looks generous; absolute kWh saved is tiny; CAC eats margin.",
+    why: "Vanity volume.",
+    objection: "Everything.",
+    cycle: "Long",
+    aov: "1 kW",
+    cac: "Too high per watt",
+  },
+];
+
+function SegmentsPage() {
+  return (
+    <div className="px-4 py-8 md:px-8 md:py-10 max-w-6xl">
+      <p className="text-[11px] uppercase tracking-[0.2em] text-fg-subtle mb-3">
+        Who to sell
+      </p>
+      <h1 className="font-display text-3xl md:text-4xl tracking-tight">Customer segments</h1>
+      <p className="mt-3 text-sm text-fg-muted max-w-2xl leading-relaxed">
+        Optimal mix for a limited-budget installer in this market: 55% residential
+        3–5 kW, 25% small commercial, 15% apartments/institutional, 5% industrial
+        B2B. That is a <Kind k="RECOMMENDATION" /> not a law of physics.
+      </p>
+      <div className="mt-8 grid gap-3">
+        {SEGMENTS.map((s) => (
+          <article key={s.name} className="rounded-lg border border-line bg-bg-elev p-5">
+            <div className="flex flex-wrap items-baseline gap-3">
+              <h2 className="font-display text-xl">{s.name}</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-fg-subtle">
+                {s.priority}
+              </span>
+            </div>
+            <dl className="mt-3 grid gap-2 sm:grid-cols-2 text-sm">
+              <div><dt className="text-fg-subtle">Where</dt><dd className="text-fg-muted">{s.where}</dd></div>
+              <div><dt className="text-fg-subtle">Addressable</dt><dd className="text-fg-muted">{s.size}</dd></div>
+              <div><dt className="text-fg-subtle">Why they buy</dt><dd className="text-fg-muted">{s.why}</dd></div>
+              <div><dt className="text-fg-subtle">Ability / ROI</dt><dd className="text-fg-muted">{s.pay}</dd></div>
+              <div><dt className="text-fg-subtle">Objection</dt><dd className="text-fg-muted">{s.objection}</dd></div>
+              <div><dt className="text-fg-subtle">Cycle · AOV · CAC</dt><dd className="text-fg-muted">{s.cycle} · {s.aov} · {s.cac}</dd></div>
+            </dl>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}

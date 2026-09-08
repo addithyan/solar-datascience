@@ -1,0 +1,401 @@
+{
+  "statewide": {
+    "sampleTransformers": 28000,
+    "districts": 14,
+    "sampleSections": 229,
+    "balanceKw": 2190666.0,
+    "balanceMw": 2190.67,
+    "capKw": 2841949.0,
+    "issuedKw": 71609.4,
+    "connectedKw": 580154.9,
+    "classCounts": {
+      "Very High": 17649,
+      "High": 5685,
+      "Medium": 2704,
+      "Low": 786,
+      "Very Low": 1169,
+      "Unknown": 7
+    },
+    "meanPct": 76.33,
+    "medianPct": 85.9,
+    "pmsgInstallsKnown": 284090,
+    "pmsgAppsKnown": 415357,
+    "households": 7853754,
+    "capNote": "Each district file is capped at 2,000 transformers. Totals are SAMPLE totals, not the full KSEB DTR population."
+  },
+  "quality": {
+    "files": 14,
+    "rowsExtracted": 28000,
+    "rowsPerDistrict": 2000,
+    "duplicateKeys": 0,
+    "negativeValues": 0,
+    "missingPct": 7,
+    "unknownClass": 7,
+    "unknownClassNote": "All 7 Unknown class rows also had missing %; 5 in Kasaragod, 2 in Thiruvananthapuram. Retained and % imputed from balance/cap.",
+    "formulaMismatches": 56,
+    "formulaMismatchNote": "Almost all mismatches are overloaded DTRs where issued+connected > 90% cap and source floors balance at 0. Retained as Very Low / saturated. Not removed.",
+    "boundaryClassMismatches": 12,
+    "boundaryNote": "Exact 25/50/75% values sometimes labelled in the lower class. Source class retained.",
+    "districtNameWrap": "Thiruvananthapuram wrapped as THIRUVANANTHAPU RAM in PDF; normalised.",
+    "kasaragodSpelling": "Source files use KASARGODE; report uses standard Kasaragod.",
+    "sampleCap": "Every district file is exactly 2,000 transformers. This is a generator cap, not a complete DTR census. Larger urban districts are geographically truncated (e.g. Ernakulam sample has 13 electrical sections; Thiruvananthapuram has 21).",
+    "adminMismatch": "KSEB electrical sections do not always match revenue districts (e.g. Thodupuzha sections appear under Ernakulam in the source file). Analysis follows the source district label.",
+    "decision": {
+      "missingPct": "imputed",
+      "overloaded": "retained_as_saturated",
+      "duplicates": "none",
+      "sampleCap": "flagged_not_inflated"
+    }
+  },
+  "dictionary": [
+    {
+      "name": "District",
+      "desc": "KSEB report district label (electrical admin, not always revenue district).",
+      "type": "string",
+      "unit": "\u2014",
+      "source": "KSEB RE Feasibility PDF",
+      "observed": "observed",
+      "modelling": true,
+      "limits": "Name wrapping and Kasargode spelling; electrical \u2260 revenue boundary."
+    },
+    {
+      "name": "Section",
+      "desc": "KSEB electrical section name with numeric section code.",
+      "type": "string",
+      "unit": "\u2014",
+      "source": "KSEB PDF",
+      "observed": "observed",
+      "modelling": true,
+      "limits": "Not a panchayat/municipality. Cannot be joined to LSG census without a crosswalk (unavailable)."
+    },
+    {
+      "name": "Transformer",
+      "desc": "Distribution transformer (DTR) name / location label.",
+      "type": "string",
+      "unit": "\u2014",
+      "source": "KSEB PDF",
+      "observed": "observed",
+      "modelling": true,
+      "limits": "Names are operational nicknames, not consumer IDs. Useful as location clues (HOTEL, SCHOOL) but not a customer list."
+    },
+    {
+      "name": "90% Cap (kW)",
+      "desc": "90% of DTR capacity \u2014 the hosting-capacity ceiling used by KSEB for RE feasibility.",
+      "type": "number",
+      "unit": "kW",
+      "source": "KSEB PDF",
+      "observed": "derived_by_source",
+      "modelling": true,
+      "limits": "Already 90% of nameplate. Typical DTR sizes cluster at 20, 81, 129, 202 kW (corresponding to 25/100/160/250 kVA class at ~0.9 pf)."
+    },
+    {
+      "name": "Issued (kW)",
+      "desc": "Solar capacity sanctioned / registration issued but not necessarily commissioned.",
+      "type": "number",
+      "unit": "kW",
+      "source": "KSEB PDF",
+      "observed": "observed",
+      "modelling": true,
+      "limits": "May include cancelled or delayed registrations. Not equal to installed capacity."
+    },
+    {
+      "name": "Connected (kW)",
+      "desc": "Solar capacity already connected on that DTR.",
+      "type": "number",
+      "unit": "kW",
+      "source": "KSEB PDF",
+      "observed": "observed",
+      "modelling": true,
+      "limits": "Best available proxy for existing rooftop solar on the transformer. Not household counts."
+    },
+    {
+      "name": "Balance (kW)",
+      "desc": "Remaining connectable RE capacity on the DTR after issued + connected.",
+      "type": "number",
+      "unit": "kW",
+      "source": "KSEB PDF",
+      "observed": "derived_by_source",
+      "modelling": true,
+      "limits": "Floored at 0 when issued+connected exceeds 90% cap. This is GRID HEADROOM, not rooftop area or customer willingness."
+    },
+    {
+      "name": "Balance %",
+      "desc": "(Balance \u00f7 90% DTR capacity) \u00d7 100.",
+      "type": "number",
+      "unit": "%",
+      "source": "KSEB PDF",
+      "observed": "derived_by_source",
+      "modelling": true,
+      "limits": "High % can mean either unused opportunity or weak local demand."
+    },
+    {
+      "name": "Class",
+      "desc": "Feasibility band: Very High / High / Medium / Low / Very Low / Unknown.",
+      "type": "ordinal",
+      "unit": "\u2014",
+      "source": "KSEB PDF",
+      "observed": "derived_by_source",
+      "modelling": true,
+      "limits": "Observed cut-points: Very High \u226575%, High 50\u2013<75, Medium 25\u2013<50, Low 10\u2013<25, Very Low <10. Boundary labels occasionally inconsistent."
+    }
+  ],
+  "weights": {
+    "technicalIndex": 0.12,
+    "marketIndex": 0.14,
+    "purchasingIndex": 0.14,
+    "roiIndex": 0.08,
+    "conversionIndex": 0.14,
+    "profitIndex": 0.16,
+    "revenueIndex": 0.1,
+    "marketingEase": 0.08,
+    "competitionAdj": 0.04
+  },
+  "sensitivity": {
+    "base": {
+      "scores": {
+        "Alappuzha": 56.0,
+        "Ernakulam": 73.4,
+        "Idukki": 31.7,
+        "Kannur": 67.0,
+        "Kasaragod": 50.4,
+        "Kollam": 56.6,
+        "Kottayam": 60.3,
+        "Kozhikode": 67.6,
+        "Malappuram": 60.4,
+        "Palakkad": 53.9,
+        "Pathanamthitta": 40.8,
+        "Thiruvananthapuram": 66.9,
+        "Thrissur": 71.7,
+        "Wayanad": 21.8
+      },
+      "order": [
+        "Ernakulam",
+        "Thrissur",
+        "Kozhikode",
+        "Kannur",
+        "Thiruvananthapuram",
+        "Malappuram",
+        "Kottayam",
+        "Kollam",
+        "Alappuzha",
+        "Palakkad",
+        "Kasaragod",
+        "Pathanamthitta",
+        "Idukki",
+        "Wayanad"
+      ]
+    },
+    "technicalHeavy": {
+      "scores": {
+        "Alappuzha": 40.7,
+        "Ernakulam": 54.6,
+        "Idukki": 50.2,
+        "Kannur": 55.7,
+        "Kasaragod": 54.1,
+        "Kollam": 39.3,
+        "Kottayam": 58.7,
+        "Kozhikode": 68.0,
+        "Malappuram": 53.5,
+        "Palakkad": 57.0,
+        "Pathanamthitta": 39.9,
+        "Thiruvananthapuram": 60.3,
+        "Thrissur": 53.4,
+        "Wayanad": 44.3
+      },
+      "order": [
+        "Kozhikode",
+        "Thiruvananthapuram",
+        "Kottayam",
+        "Palakkad",
+        "Kannur",
+        "Ernakulam",
+        "Kasaragod",
+        "Malappuram",
+        "Thrissur",
+        "Idukki",
+        "Wayanad",
+        "Alappuzha",
+        "Pathanamthitta",
+        "Kollam"
+      ]
+    },
+    "marketHeavy": {
+      "scores": {
+        "Alappuzha": 57.5,
+        "Ernakulam": 79.1,
+        "Idukki": 27.0,
+        "Kannur": 65.7,
+        "Kasaragod": 43.7,
+        "Kollam": 60.1,
+        "Kottayam": 57.5,
+        "Kozhikode": 67.3,
+        "Malappuram": 62.3,
+        "Palakkad": 51.3,
+        "Pathanamthitta": 36.3,
+        "Thiruvananthapuram": 69.0,
+        "Thrissur": 74.8,
+        "Wayanad": 15.8
+      },
+      "order": [
+        "Ernakulam",
+        "Thrissur",
+        "Thiruvananthapuram",
+        "Kozhikode",
+        "Kannur",
+        "Malappuram",
+        "Kollam",
+        "Alappuzha",
+        "Kottayam",
+        "Palakkad",
+        "Kasaragod",
+        "Pathanamthitta",
+        "Idukki",
+        "Wayanad"
+      ]
+    },
+    "efficiencyHeavy": {
+      "scores": {
+        "Alappuzha": 57.6,
+        "Ernakulam": 72.4,
+        "Idukki": 31.3,
+        "Kannur": 70.1,
+        "Kasaragod": 54.2,
+        "Kollam": 57.7,
+        "Kottayam": 63.1,
+        "Kozhikode": 69.3,
+        "Malappuram": 60.6,
+        "Palakkad": 55.8,
+        "Pathanamthitta": 44.3,
+        "Thiruvananthapuram": 67.8,
+        "Thrissur": 73.1,
+        "Wayanad": 22.2
+      },
+      "order": [
+        "Thrissur",
+        "Ernakulam",
+        "Kannur",
+        "Kozhikode",
+        "Thiruvananthapuram",
+        "Kottayam",
+        "Malappuram",
+        "Kollam",
+        "Alappuzha",
+        "Palakkad",
+        "Kasaragod",
+        "Pathanamthitta",
+        "Idukki",
+        "Wayanad"
+      ]
+    }
+  },
+  "correlations": [
+    {
+      "x": "urbanShare",
+      "y": "saturatedShare",
+      "r": 0.612,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "pcGddp",
+      "y": "pmsgPenetrationHh",
+      "r": 0.673,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "pmsgPenetrationHh",
+      "y": "saturatedShare",
+      "r": 0.878,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "vhShare",
+      "y": "pmsgPenetrationHh",
+      "r": -0.84,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "purchasingIndex",
+      "y": "pmsgConversion",
+      "r": 0.333,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "urbanShare",
+      "y": "pmsgPenetrationHh",
+      "r": 0.741,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "floodRisk",
+      "y": "saturatedShare",
+      "r": 0.608,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "pcGddp",
+      "y": "opportunityScore",
+      "r": 0.404,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "technicalIndex",
+      "y": "opportunityScore",
+      "r": -0.564,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "marketIndex",
+      "y": "opportunityScore",
+      "r": 0.884,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    },
+    {
+      "x": "balanceKw",
+      "y": "pmsgInstalls",
+      "r": 0.007,
+      "n": 14,
+      "note": "District-level; n=14 so treat as directional only."
+    }
+  ],
+  "whitespace": [
+    {
+      "district": "Ernakulam",
+      "type": "demand_with_grid_congestion",
+      "note": "Adoption is already high and a non-trivial share of sampled DTRs are saturated. Neighbourhood campaigns will hit feasibility walls; target remaining High/VH pockets only."
+    },
+    {
+      "district": "Thrissur",
+      "type": "demand_with_grid_congestion",
+      "note": "Adoption is already high and a non-trivial share of sampled DTRs are saturated. Neighbourhood campaigns will hit feasibility walls; target remaining High/VH pockets only."
+    },
+    {
+      "district": "Kozhikode",
+      "type": "high_headroom_low_adoption",
+      "read": "untapped_or_barrier",
+      "note": "High remaining DTR headroom with below-median PM Surya Ghar penetration. Could be untapped demand or a hidden barrier (income, roof, awareness, installer absence)."
+    },
+    {
+      "district": "Kottayam",
+      "type": "high_headroom_low_adoption",
+      "read": "untapped_or_barrier",
+      "note": "High remaining DTR headroom with below-median PM Surya Ghar penetration. Could be untapped demand or a hidden barrier (income, roof, awareness, installer absence)."
+    },
+    {
+      "district": "Alappuzha",
+      "type": "demand_with_grid_congestion",
+      "note": "Adoption is already high and a non-trivial share of sampled DTRs are saturated. Neighbourhood campaigns will hit feasibility walls; target remaining High/VH pockets only."
+    }
+  ],
+  "attMedian": 57.45,
+  "easeMedian": 65.45
+}

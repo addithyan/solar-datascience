@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "SOURA Command",
+      "hasCanvas": false,
+      "bodyTextLen": 6587,
+      "bodyTextHash": "682eaefc2f3824cc877f6278c3b153a5a6d85cc69415602fbf924cc74904ba12",
+      "bodyTextPrefix": "SOURA COMMAND KERALA ROOFTOP · 8 SEP 2026 SNAPSHOT Command Prior",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "SOURA Command",
+      "hasCanvas": false,
+      "bodyTextLen": 6445,
+      "bodyTextHash": "894af6f5e6af38ca0f51780cdd6a29d5b78f41aee12e0ba2123a95d645d70b62",
+      "bodyTextPrefix": "SOURA COMMAND EXECUTIVE COMMAND Sell where the grid still has ro",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
